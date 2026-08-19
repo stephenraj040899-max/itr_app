@@ -6,10 +6,12 @@ AI-assisted tax intelligence with human review for Indian income-tax return prep
 
 - Next.js 16 App Router, React 19, strict TypeScript and Tailwind CSS 4.
 - Responsive six-step client flow, dashboard, privacy settings, staff queue and evidence-review workspace.
+- Runtime-isolated client and staff surfaces intended for separate Cloud Run services and URLs.
 - PAN normalisation/masking/HMAC fingerprint utilities and UUIDv7 identifiers.
 - Server-side Firebase ID-token verification and server-controlled roles.
 - Deterministic AY 2026-27 calculation engine with old/new comparison, deduction traces and 80G planning controls.
 - File metadata, size and magic-byte validation; safe renamed-document convention.
+- Server-only Gemini 3.5 Flash extraction for PAN, masked Aadhaar, salary slips and Form 16, with schema validation and mandatory human confirmation.
 - Deny-by-default Firestore rules, BigQuery DDL and unapplied Terraform infrastructure definitions.
 - Unit/security tests and Playwright smoke tests using synthetic data only.
 
@@ -65,7 +67,7 @@ Environment-specific private buckets separate quarantine, clean documents and te
 - Create Enterprise Document OCR and Form Parser processors only after regional/data-residency review.
 - Configure processor IDs and locations through environment variables.
 - Keep model IDs configurable.
-- Send minimum case-scoped data, label document text as untrusted, require strict JSON schemas and never let model output approve a deduction.
+- Send minimum case-scoped data, label document text as untrusted, require strict JSON schemas and never let model output approve a deduction. Gemini extraction uses Vertex AI with Application Default Credentials. Production requires the Cloud Run service account to have Vertex AI access, plus authenticated requests and approved data-processing terms.
 
 ## BigQuery migrations
 

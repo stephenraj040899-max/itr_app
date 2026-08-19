@@ -16,7 +16,10 @@ const schema = z.object({
   GCS_EXPORT_BUCKET: z.string().optional(),
   PAN_HMAC_SECRET_NAME: z.string().optional(),
   SIGNED_URL_TTL_SECONDS: z.coerce.number().int().min(60).max(900).default(600),
-  SESSION_COOKIE_NAME: z.string().default("taxright_session")
+  SESSION_COOKIE_NAME: z.string().default("taxright_session"),
+  APP_SURFACE: z.enum(["CLIENT", "STAFF"]).default("CLIENT"),
+  VERTEX_LOCATION: z.string().default("global"),
+  VERTEX_EXTRACTION_MODEL: z.string().default("gemini-3.5-flash")
 });
 
 export type ServerEnv = z.infer<typeof schema>;
