@@ -11,6 +11,17 @@ export async function signIn(email: string, password: string, create = false) {
 
 export function clearSignIn() { localStorage.removeItem(TOKEN_KEY); }
 
+export async function submitCaseForReview(caseId: string): Promise<{ caseId: string; status: string }> {
+  const token = typeof window === "undefined" ? null : localStorage.getItem(TOKEN_KEY);
+  if (!token) throw new Error("Please sign in before submitting your case for review.");
+  const response = await fetch(`/api/cases/${encodeURIComponent(caseId)}/submit`, { method: "POST", headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({}), signal: AbortSignal.timeout(15_000) });
+  const body = await response.json() as { caseId?: string; status?: string; error?: { message?: string } };
+  if (response.status === 401) throw new Error("Please sign in before submitting your case for review.");
+  if (!response.ok || !body.caseId) throw new Error(body.error?.message ?? "We couldn’t submit your case. Please try again.");
+  return { caseId: body.caseId, status: body.status ?? "SUBMITTED_FOR_REVIEW" };
+}
+
+
 import type { ExtractionRequestType, TaxDocumentExtraction } from "./extraction";
 
 export async function requestDocumentExtraction(file: File, requestedType: ExtractionRequestType): Promise<TaxDocumentExtraction & { model: string }> {

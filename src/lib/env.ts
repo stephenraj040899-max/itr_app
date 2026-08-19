@@ -18,6 +18,7 @@ const schema = z.object({
   SIGNED_URL_TTL_SECONDS: z.coerce.number().int().min(60).max(900).default(600),
   SESSION_COOKIE_NAME: z.string().default("taxright_session"),
   APP_SURFACE: z.enum(["CLIENT", "STAFF"]).default("CLIENT"),
+  NATURE_LABS_PAYMENT_URL: z.url().optional(),
   VERTEX_LOCATION: z.string().default("global"),
   VERTEX_EXTRACTION_MODEL: z.string().default("gemini-3.5-flash")
 });
