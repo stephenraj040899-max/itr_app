@@ -1,4 +1,8 @@
 import { describe,expect,it } from "vitest";
 import { renamedDocumentName } from "@/lib/documents/naming";
 import { safeOriginalName,signatureMatches } from "@/lib/documents/security";
+import { normalizeExtractedDate } from "@/lib/documents/extraction";
+import { taxPeriodFromMonth } from "@/lib/tax/period";
 describe("document security",()=>{it("uses a PAN-free deterministic filename",()=>expect(renamedDocumentName({clientId:"0198abcd-0000-7000-8000-000000000000",assessmentYear:"AY2026-27",documentType:"FORM_16_PART_A",issuer:"Example Employer",documentDate:"2026-03-31",sequence:1,extension:"pdf"})).toBe("TRAI_0198AB_AY2026-27_FORM_16_PART_A_EXAMPLE_EMPLOYER_20260331_01.pdf"));it("blocks traversal in original names",()=>expect(safeOriginalName("../../unsafe file.pdf")).not.toContain("/"));it("checks file signatures",()=>expect(signatureMatches(new Uint8Array([0x25,0x50,0x44,0x46]),"application/pdf")).toBe(true))});
+describe("tax periods",()=>{it("uses Tax Year for July 2026",()=>{const p=taxPeriodFromMonth("JUL-2026");expect(p.key).toBe("TY2026-27");expect(p.assessmentYear).toBeNull();expect(p.label).toBe("Tax Year 2026-27")});it("keeps AY for March 2026",()=>expect(taxPeriodFromMonth("MAR-2026").key).toBe("AY2026-27"));});
+describe("extracted identity dates",()=>{it("normalizes common PAN-card dates for date inputs",()=>{expect(normalizeExtractedDate("19/08/1972")).toBe("1972-08-19");expect(normalizeExtractedDate("1972-08-19")).toBe("1972-08-19")});it("rejects impossible or ambiguous values",()=>{expect(normalizeExtractedDate("31/02/1972")).toBeNull();expect(normalizeExtractedDate("August 1972")).toBeNull()})});

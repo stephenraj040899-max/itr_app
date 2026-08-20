@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
 import { serverEnv } from "@/lib/env";
 import { roles, type AuthenticatedUser, type Role } from "./roles";
 
-function adminApp(){
+export function adminApp(){
  if(getApps().length)return getApps()[0]!;
  const env=serverEnv();
  const credential=env.FIREBASE_CLIENT_EMAIL&&env.FIREBASE_PRIVATE_KEY&&env.GCP_PROJECT_ID?cert({projectId:env.GCP_PROJECT_ID,clientEmail:env.FIREBASE_CLIENT_EMAIL,privateKey:env.FIREBASE_PRIVATE_KEY.replace(/\\n/g,"\n")}):applicationDefault();

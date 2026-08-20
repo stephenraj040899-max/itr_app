@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./forms.css";
 
 :root {
   --ink: #101d32;
